@@ -1,0 +1,334 @@
+
+<!DOCTYPE html>
+
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<title>محلات أيمن أبو الشوارب — دفتر الموردين</title>
+<style>
+/* ====== Theme (Colorful, Modern, Local Single File) ====== */
+:root{
+  --bg1:#f9f7ff;
+  --bg2:#e7f3ff;
+  --bg3:#fff1f2;
+  --card:#ffffffee;
+  --line:#e5e7eb;
+  --txt:#0f172a;
+  --muted:#6b7280;
+  --pri:#7c3aed;   /* Violet */
+  --pri-600:#6d28d9;
+  --ok:#10b981;    /* Emerald */
+  --warn:#ef4444;  /* Red */
+  --amber:#f59e0b; /* Amber */
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0; font-family: 'Tahoma', system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Kufi Arabic", sans-serif;
+  color:var(--txt); background:
+  radial-gradient(1200px 800px at 110% -20%, var(--bg2), transparent 60%),
+  radial-gradient(1000px 700px at -10% 0%, var(--bg3), transparent 55%),
+  linear-gradient(180deg, var(--bg1), #ffffff);
+}
+
+/* Topbar */
+.topbar{
+  position:sticky; top:0; z-index:10;
+  backdrop-filter: blur(8px);
+  background: linear-gradient(135deg, #ffffffcc, #f8f5ffcc);
+  border-bottom:1px solid var(--line);
+}
+.container{max-width:1200px;margin:0 auto;padding:16px}
+.brand{
+  display:flex; align-items:center; gap:12px; font-weight:800; letter-spacing:.4px;
+  color:#111; font-size:18px;
+}
+.brand .dot{width:10px; height:10px; border-radius:50%;
+  background: conic-gradient(from 90deg at 50% 50%, var(--pri), #22c55e, #f59e0b, var(--pri));
+  box-shadow: 0 0 0 4px #f5f3ff, 0 0 0 8px #eef2ff;
+}
+.nav{display:flex; gap:8px; flex-wrap:wrap}
+.tabs{display:flex; gap:8px; align-items:center}
+.tab{border:1px solid var(--line); background:#fff; padding:8px 14px; border-radius:10px; cursor:pointer}
+.tab.active{background:var(--pri); color:#fff; border-color:transparent}
+
+/* Layout */
+.page{padding:16px 0 48px}
+.grid{display:grid; gap:16px}
+@media(min-width:900px){ .grid{grid-template-columns: 1fr 1fr} }
+.card{
+  background: var(--card);
+  border:1px solid var(--line);
+  border-radius:16px; padding:16px;
+  box-shadow: 0 10px 30px -20px rgba(16,24,40,.25);
+}
+.card h3{margin:0 0 12px 0; font-size:18px}
+
+/* Buttons & Inputs */
+.btn{padding:10px 14px; border-radius:12px; border:1px solid var(--line); background:#fff; cursor:pointer}
+.btn.primary{background:var(--pri); color:#fff; border-color:transparent}
+.btn.success{background:var(--ok); color:#fff; border-color:transparent}
+.btn.warn{background:var(--warn); color:#fff; border-color:transparent}
+.btn.ghost{background:transparent}
+.btn:active{transform:translateY(1px)}
+.row-btns{display:flex; gap:8px; flex-wrap:wrap}
+.field{display:flex; flex-direction:column; gap:6px}
+.field input,.field select,.field textarea{
+  padding:10px 12px; border-radius:10px; border:1px solid var(--line); background:#fff;
+}
+.grid-2{display:grid; gap:12px}
+@media(min-width:700px){ .grid-2{grid-template-columns:1fr 1fr} }
+
+/* Tables */
+.table-wrap{max-height:430px; overflow:auto; border:1px solid var(--line); border-radius:12px}
+table{width:100%; border-collapse:separate; border-spacing:0}
+th,td{padding:10px 12px; border-bottom:1px solid var(--line); text-align:right; white-space:nowrap}
+thead th{position:sticky; top:0; background:#fafafa}
+tbody tr:hover td{background:#faf5ff}
+
+/* Badges & Numbers */
+.badge{display:inline-block;border-radius:999px;padding:.25rem .6rem;font-size:.85rem;border:1px solid var(--line);background:#fff}
+.badge.pri{background:#f3e8ff;border-color:#ecd7ff;color:#6d28d9}
+.badge.ok{background:#ecfdf5;border-color:#bbf7d0;color:#047857}
+.badge.warn{background:#fef2f2;border-color:#fecaca;color:#b91c1c}
+.num.positive{ color:var(--warn); font-weight:700 }
+.num.negative{ color:var(--ok); font-weight:700 }
+
+/* Modals */
+.modal{position:fixed; inset:0; display:none; align-items:flex-start; justify-content:center; padding:40px 16px; background:#00000033; z-index:50}
+.modal.show{display:flex}
+.modal-box{width:min(800px, 100%); background:#fff; border-radius:16px; border:1px solid var(--line); padding:16px}
+
+/* Helper */
+.muted{color:var(--muted)}
+.toolbar{display:flex; gap:8px; align-items:center; justify-content:space-between; margin-bottom:8px; flex-wrap:wrap}
+.search{display:flex; gap:8px; align-items:center}
+.kpi{display:grid; grid-template-columns: repeat(3,1fr); gap:12px}
+.kpi .tile{padding:14px; border:1px solid var(--line); border-radius:12px; background:#fff}
+.empty{padding:16px; text-align:center; color:var(--muted)}
+
+
+.week .day{padding:10px 14px;border-radius:12px;border:1px solid var(--line);background:#fff;cursor:pointer}
+.week .day.active{background:var(--pri);color:#fff;border-color:transparent}
+</style>
+</head>
+<body>
+<div class="topbar">
+<div class="container">
+<div style="display:flex; align-items:center; justify-content:space-between; gap:12px">
+<div class="brand"><span class="dot"></span> <span>دفتر الموردين — محلات أيمن أبو الشوارب</span></div>
+<div class="tabs">
+<button class="tab active" data-tab="#dash">الملخص</button>
+<button class="tab" data-tab="#sup">الموردون</button>
+<button class="tab" data-tab="#inv">الفواتير</button>
+<button class="tab" data-tab="#pay">الدفعات</button>
+<button class="tab" data-tab="#rpt">التقرير</button>
+</div>
+</div>
+</div>
+</div>
+<div class="container page">
+<div class="tabcontent" id="dash" style="display:block">
+<div class="grid">
+<div class="card">
+<h3>ملخص سريع</h3>
+<div class="kpi">
+<div class="tile"><div class="muted">إجمالي الفواتير</div><div class="num" id="kInv">0</div></div>
+<div class="tile"><div class="muted">إجمالي الدفعات</div><div class="num" id="kPay">0</div></div>
+<div class="tile"><div class="muted">الرصيد الكلي</div><div class="num" id="kBal">0</div></div>
+</div>
+<div style="height:12px"></div>
+<div class="grid-2">
+<div class="field">
+<label>اختر المورّد</label>
+<select id="selSupplier"></select>
+</div>
+<div class="field">
+<label>الرصيد الحالي</label>
+<div class="num" id="selBalance">0</div>
+</div>
+</div>
+<div class="row-btns" style="margin-top:10px">
+<button class="btn primary" id="btnAddInvoice">إضافة فاتورة</button>
+<button class="btn success" id="btnAddPayment">إضافة دفعة</button>
+<button class="btn" id="btnAddSupplier">إضافة/تعديل مورد</button>
+<button class="btn" id="btnStatement" style="background:linear-gradient(135deg,#fde68a,#fca5a5);border-color:transparent">كشف حساب</button>
+</div>
+</div>
+<div class="card">
+<h3>تذكير أسبوعي</h3>
+<div class="muted">يمكنك تعيين يوم الزيارة لكل مورد (اختياري) ليسهُل ترتيب الأسبوع.</div>
+<div class="empty" id="visitList">لا توجد زيارات محددة.</div>
+</div><div class="card">
+<h3>تقويم أسبوعي</h3>
+<div class="week" id="weekBar" style="display:flex;gap:8px;flex-wrap:wrap">
+<button class="day" data-day="السبت">السبت</button>
+<button class="day" data-day="الأحد">الأحد</button>
+<button class="day" data-day="الإثنين">الإثنين</button>
+<button class="day" data-day="الثلاثاء">الثلاثاء</button>
+<button class="day" data-day="الأربعاء">الأربعاء</button>
+<button class="day" data-day="الخميس">الخميس</button>
+<button class="day" data-day="الجمعة">الجمعة</button>
+</div>
+<div class="muted" style="margin-top:6px">اضغط على اليوم لعرض الموردين المقرّرين لذلك اليوم.</div>
+</div>
+</div>
+</div>
+<div class="tabcontent" id="sup" style="display:none">
+<div class="card">
+<div class="toolbar">
+<h3>الموردون</h3>
+<div class="row-btns">
+<div class="search"><input id="supSearch" placeholder="بحث بالاسم"/><button class="btn ghost" id="supClear">مسح</button></div>
+<button class="btn primary" id="addSupplier">إضافة مورد</button>
+</div>
+</div>
+<div class="table-wrap">
+<table class="table">
+<thead><tr><th>#</th><th>الاسم</th><th>يوم الزيارة</th><th>افتتاحي</th><th>الرصيد</th><th>إجراءات</th></tr></thead>
+<tbody id="supBody"></tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="tabcontent" id="inv" style="display:none">
+<div class="card">
+<div class="toolbar">
+<div class="row-btns">
+<span class="badge pri">إجمالي الفواتير: <b id="invTotal">0</b></span>
+</div>
+<div class="row-btns">
+<button class="btn ghost" id="exportInvCsv">تصدير CSV</button>
+<button class="btn primary" id="newInv">فاتورة جديدة</button>
+</div>
+</div>
+<div class="table-wrap">
+<table class="table small">
+<thead><tr><th>التاريخ</th><th>رقم الفاتورة</th><th>المورد</th><th>المبلغ</th><th>ملاحظات</th><th>إجراءات</th></tr></thead>
+<tbody id="invBody"></tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="tabcontent" id="pay" style="display:none">
+<div class="card">
+<div class="toolbar">
+<div class="row-btns">
+<span class="badge ok">إجمالي الدفعات: <b id="payTotal">0</b></span>
+</div>
+<div class="row-btns">
+<button class="btn ghost" id="exportPayCsv">تصدير CSV</button>
+<button class="btn success" id="newPay">دفعة جديدة</button>
+</div>
+</div>
+<div class="table-wrap">
+<table class="table small">
+<thead><tr><th>التاريخ</th><th>المورد</th><th>الطريقة</th><th>المندوب</th><th>المبلغ</th><th>ملاحظات</th><th>إجراءات</th></tr></thead>
+<tbody id="payBody"></tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="tabcontent" id="rpt" style="display:none">
+<div class="card">
+<div class="toolbar">
+<h3>تقرير إجمالي حسب المورّد</h3>
+<button class="btn ghost" id="exportReportCsv">تصدير CSV</button>
+</div>
+<div class="table-wrap">
+<table class="table">
+<thead><tr><th>المورد</th><th>إجمالي فواتير</th><th>إجمالي دفعات</th><th>افتتاحي</th><th>الرصيد الحالي</th></tr></thead>
+<tbody id="rBody"></tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+<!-- ========== Modals ========== -->
+<div class="modal" id="mSup"><div class="modal-box">
+<h3 id="supTitle">إضافة مورد</h3>
+<div class="grid-2">
+<div class="field"><label>اسم المورد</label><input id="sName"/></div>
+<div class="field"><label>يوم الزيارة</label>
+<select id="sDay">
+<option value="">لا يوجد</option>
+<option>السبت</option><option>الأحد</option><option>الإثنين</option>
+<option>الثلاثاء</option><option>الأربعاء</option><option>الخميس</option><option>الجمعة</option>
+</select>
+</div>
+<div class="field"><label>رصيد افتتاحي</label><input id="sOpening" step="0.01" type="number" value="0"/></div>
+<div class="field"><label>ملاحظات</label><input id="sNote"/></div>
+</div>
+<div style="height:8px"></div>
+<div class="row-btns">
+<button class="btn primary" id="saveSup">حفظ</button>
+<button class="btn" data-close="#mSup">إغلاق</button>
+</div>
+</div></div>
+<div class="modal" id="mInv"><div class="modal-box">
+<h3 id="invTitle">فاتورة جديدة</h3>
+<div class="grid-2">
+<div class="field"><label>المورد</label><select id="iSup"></select></div>
+<div class="field"><label>التاريخ</label><input id="iDate" type="date"/></div>
+<div class="field"><label>رقم الفاتورة</label><input id="iNum"/></div>
+<div class="field"><label>المبلغ</label><input id="iAmt" step="0.01" type="number"/></div>
+<div class="field" style="grid-column:1/-1"><label>ملاحظات</label><textarea id="iNote" rows="2"></textarea></div>
+</div>
+<div style="height:8px"></div>
+<div class="row-btns">
+<button class="btn primary" id="saveInv">حفظ</button>
+<button class="btn" data-close="#mInv">إغلاق</button>
+</div>
+</div></div>
+<div class="modal" id="mPay"><div class="modal-box">
+<h3 id="payTitle">دفعة جديدة</h3>
+<div class="grid-2">
+<div class="field"><label>المورد</label><select id="pSup"></select></div>
+<div class="field"><label>التاريخ</label><input id="pDate" type="date"/></div>
+<div class="field"><label>الطريقة</label><input id="pMethod" placeholder="نقدي/شيك/تحويل"/></div>
+<div class="field"><label>المندوب</label><input id="pRep"/></div>
+<div class="field"><label>المبلغ</label><input id="pAmt" step="0.01" type="number"/></div>
+<div class="field" style="grid-column:1/-1"><label>ملاحظات</label><textarea id="pNote" rows="2"></textarea></div>
+</div>
+<div style="height:8px"></div>
+<div class="row-btns">
+<button class="btn success" id="savePay">حفظ</button>
+<button class="btn" data-close="#mPay">إغلاق</button>
+</div>
+</div></div>
+<div class="modal" id="mStatement"><div class="modal-box">
+<h3>كشف حساب — <span id="stName"></span></h3>
+<div class="grid-2">
+<div class="field"><label>من تاريخ</label><input id="stFrom" type="date"/></div>
+<div class="field"><label>إلى تاريخ</label><input id="stTo" type="date"/></div>
+</div>
+<div class="row-btns">
+<button class="btn" id="stFilter">تطبيق</button>
+<button class="btn ghost" id="stExport">تصدير CSV</button>
+<button class="btn" data-close="#mStatement">إغلاق</button>
+</div>
+<div class="table-wrap" style="max-height:420px">
+<table class="table small">
+<thead><tr><th>التاريخ</th><th>البيان</th><th>رقم/طريقة</th><th>مدين</th><th>دائن</th><th>الرصيد</th><th>ملاحظات</th></tr></thead>
+<tbody id="stBody"></tbody>
+</table>
+</div>
+</div></div>
+<script></script>
+
+<div class="modal" id="mDay"><div class="modal-box">
+<h3>موردو يوم <span id="dayName"></span></h3>
+<div class="table-wrap" id="dayList" style="max-height:420px">
+<table class="table">
+<thead><tr><th>#</th><th>المورد</th><th>الرصيد</th><th>إجراءات</th></tr></thead>
+<tbody id="dayBody"></tbody>
+</table>
+</div>
+<div class="row-btns" style="margin-top:8px">
+<button class="btn" data-close="#mDay">إغلاق</button>
+</div>
+</div></div>
+</body>
+</html>
