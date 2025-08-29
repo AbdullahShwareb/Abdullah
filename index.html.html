@@ -1,0 +1,694 @@
+
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>محلات أيمن أبو الشوارب — دفتر الموردين (نسخة محلية)</title>
+<style>
+/* ====== Theme (Colorful, Modern, Local Single File) ====== */
+:root{
+  --bg1:#f9f7ff;
+  --bg2:#e7f3ff;
+  --bg3:#fff1f2;
+  --card:#ffffffee;
+  --line:#e5e7eb;
+  --txt:#0f172a;
+  --muted:#6b7280;
+  --pri:#7c3aed;   /* Violet */
+  --pri-600:#6d28d9;
+  --ok:#10b981;    /* Emerald */
+  --warn:#ef4444;  /* Red */
+  --amber:#f59e0b; /* Amber */
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0; font-family: 'Tahoma', system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Kufi Arabic", sans-serif;
+  color:var(--txt); background:
+  radial-gradient(1200px 800px at 110% -20%, var(--bg2), transparent 60%),
+  radial-gradient(1000px 700px at -10% 0%, var(--bg3), transparent 55%),
+  linear-gradient(180deg, var(--bg1), #ffffff);
+}
+
+/* Topbar */
+.topbar{
+  position:sticky; top:0; z-index:10;
+  backdrop-filter: blur(8px);
+  background: linear-gradient(135deg, #ffffffcc, #f8f5ffcc);
+  border-bottom:1px solid var(--line);
+}
+.container{max-width:1200px;margin:0 auto;padding:16px}
+.brand{
+  display:flex; align-items:center; gap:12px; font-weight:800; letter-spacing:.4px;
+  color:#111; font-size:18px;
+}
+.brand .dot{width:10px; height:10px; border-radius:50%;
+  background: conic-gradient(from 90deg at 50% 50%, var(--pri), #22c55e, #f59e0b, var(--pri));
+  box-shadow: 0 0 0 4px #f5f3ff, 0 0 0 8px #eef2ff;
+}
+.nav{display:flex; gap:8px; flex-wrap:wrap}
+.tabs{display:flex; gap:8px; align-items:center}
+.tab{border:1px solid var(--line); background:#fff; padding:8px 14px; border-radius:10px; cursor:pointer}
+.tab.active{background:var(--pri); color:#fff; border-color:transparent}
+
+/* Layout */
+.page{padding:16px 0 48px}
+.grid{display:grid; gap:16px}
+@media(min-width:900px){ .grid{grid-template-columns: 1fr 1fr} }
+.card{
+  background: var(--card);
+  border:1px solid var(--line);
+  border-radius:16px; padding:16px;
+  box-shadow: 0 10px 30px -20px rgba(16,24,40,.25);
+}
+.card h3{margin:0 0 12px 0; font-size:18px}
+
+/* Buttons & Inputs */
+.btn{padding:10px 14px; border-radius:12px; border:1px solid var(--line); background:#fff; cursor:pointer}
+.btn.primary{background:var(--pri); color:#fff; border-color:transparent}
+.btn.success{background:var(--ok); color:#fff; border-color:transparent}
+.btn.warn{background:var(--warn); color:#fff; border-color:transparent}
+.btn.ghost{background:transparent}
+.btn:active{transform:translateY(1px)}
+.row-btns{display:flex; gap:8px; flex-wrap:wrap}
+.field{display:flex; flex-direction:column; gap:6px}
+.field input,.field select,.field textarea{
+  padding:10px 12px; border-radius:10px; border:1px solid var(--line); background:#fff;
+}
+.grid-2{display:grid; gap:12px}
+@media(min-width:700px){ .grid-2{grid-template-columns:1fr 1fr} }
+
+/* Tables */
+.table-wrap{max-height:430px; overflow:auto; border:1px solid var(--line); border-radius:12px}
+table{width:100%; border-collapse:separate; border-spacing:0}
+th,td{padding:10px 12px; border-bottom:1px solid var(--line); text-align:right; white-space:nowrap}
+thead th{position:sticky; top:0; background:#fafafa}
+tbody tr:hover td{background:#faf5ff}
+
+/* Badges & Numbers */
+.badge{display:inline-block;border-radius:999px;padding:.25rem .6rem;font-size:.85rem;border:1px solid var(--line);background:#fff}
+.badge.pri{background:#f3e8ff;border-color:#ecd7ff;color:#6d28d9}
+.badge.ok{background:#ecfdf5;border-color:#bbf7d0;color:#047857}
+.badge.warn{background:#fef2f2;border-color:#fecaca;color:#b91c1c}
+.num.positive{ color:var(--warn); font-weight:700 }
+.num.negative{ color:var(--ok); font-weight:700 }
+
+/* Modals */
+.modal{position:fixed; inset:0; display:none; align-items:flex-start; justify-content:center; padding:40px 16px; background:#00000033; z-index:50}
+.modal.show{display:flex}
+.modal-box{width:min(800px, 100%); background:#fff; border-radius:16px; border:1px solid var(--line); padding:16px}
+
+/* Helper */
+.muted{color:var(--muted)}
+.toolbar{display:flex; gap:8px; align-items:center; justify-content:space-between; margin-bottom:8px; flex-wrap:wrap}
+.search{display:flex; gap:8px; align-items:center}
+.kpi{display:grid; grid-template-columns: repeat(3,1fr); gap:12px}
+.kpi .tile{padding:14px; border:1px solid var(--line); border-radius:12px; background:#fff}
+.empty{padding:16px; text-align:center; color:var(--muted)}
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="container">
+      <div style="display:flex; align-items:center; justify-content:space-between; gap:12px">
+        <div class="brand"><span class="dot"></span> <span>دفتر الموردين — محلات أيمن أبو الشوارب</span></div>
+        <div class="tabs">
+          <button class="tab active" data-tab="#dash">الملخص</button>
+          <button class="tab" data-tab="#sup">الموردون</button>
+          <button class="tab" data-tab="#inv">الفواتير</button>
+          <button class="tab" data-tab="#pay">الدفعات</button>
+          <button class="tab" data-tab="#rpt">التقرير</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container page">
+    <div id="dash" class="tabcontent" style="display:block">
+      <div class="grid">
+        <div class="card">
+          <h3>ملخص سريع</h3>
+          <div class="kpi">
+            <div class="tile"><div class="muted">إجمالي الفواتير</div><div id="kInv" class="num">0</div></div>
+            <div class="tile"><div class="muted">إجمالي الدفعات</div><div id="kPay" class="num">0</div></div>
+            <div class="tile"><div class="muted">الرصيد الكلي</div><div id="kBal" class="num">0</div></div>
+          </div>
+          <div style="height:12px"></div>
+          <div class="grid-2">
+            <div class="field">
+              <label>اختر المورّد</label>
+              <select id="selSupplier"></select>
+            </div>
+            <div class="field">
+              <label>الرصيد الحالي</label>
+              <div id="selBalance" class="num">0</div>
+            </div>
+          </div>
+          <div class="row-btns" style="margin-top:10px">
+            <button id="btnAddInvoice" class="btn primary">إضافة فاتورة</button>
+            <button id="btnAddPayment" class="btn success">إضافة دفعة</button>
+            <button id="btnAddSupplier" class="btn">إضافة/تعديل مورد</button>
+            <button id="btnStatement" class="btn" style="background:linear-gradient(135deg,#fde68a,#fca5a5);border-color:transparent">كشف حساب</button>
+          </div>
+        </div>
+        <div class="card">
+          <h3>تذكير أسبوعي</h3>
+          <div class="muted">يمكنك تعيين يوم الزيارة لكل مورد (اختياري) ليسهُل ترتيب الأسبوع.</div>
+          <div id="visitList" class="empty">لا توجد زيارات محددة.</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="sup" class="tabcontent" style="display:none">
+      <div class="card">
+        <div class="toolbar">
+          <h3>الموردون</h3>
+          <div class="row-btns">
+            <div class="search"><input id="supSearch" placeholder="بحث بالاسم"><button id="supClear" class="btn ghost">مسح</button></div>
+            <button id="addSupplier" class="btn primary">إضافة مورد</button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table class="table">
+            <thead><tr><th>#</th><th>الاسم</th><th>يوم الزيارة</th><th>افتتاحي</th><th>الرصيد</th><th>إجراءات</th></tr></thead>
+            <tbody id="supBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div id="inv" class="tabcontent" style="display:none">
+      <div class="card">
+        <div class="toolbar">
+          <div class="row-btns">
+            <span class="badge pri">إجمالي الفواتير: <b id="invTotal">0</b></span>
+          </div>
+          <div class="row-btns">
+            <button id="exportInvCsv" class="btn ghost">تصدير CSV</button>
+            <button id="newInv" class="btn primary">فاتورة جديدة</button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table class="table small">
+            <thead><tr><th>التاريخ</th><th>رقم الفاتورة</th><th>المورد</th><th>المبلغ</th><th>ملاحظات</th><th>إجراءات</th></tr></thead>
+            <tbody id="invBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div id="pay" class="tabcontent" style="display:none">
+      <div class="card">
+        <div class="toolbar">
+          <div class="row-btns">
+            <span class="badge ok">إجمالي الدفعات: <b id="payTotal">0</b></span>
+          </div>
+          <div class="row-btns">
+            <button id="exportPayCsv" class="btn ghost">تصدير CSV</button>
+            <button id="newPay" class="btn success">دفعة جديدة</button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table class="table small">
+            <thead><tr><th>التاريخ</th><th>المورد</th><th>الطريقة</th><th>المندوب</th><th>المبلغ</th><th>ملاحظات</th><th>إجراءات</th></tr></thead>
+            <tbody id="payBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div id="rpt" class="tabcontent" style="display:none">
+      <div class="card">
+        <div class="toolbar">
+          <h3>تقرير إجمالي حسب المورّد</h3>
+          <button id="exportReportCsv" class="btn ghost">تصدير CSV</button>
+        </div>
+        <div class="table-wrap">
+          <table class="table">
+            <thead><tr><th>المورد</th><th>إجمالي فواتير</th><th>إجمالي دفعات</th><th>افتتاحي</th><th>الرصيد الحالي</th></tr></thead>
+            <tbody id="rBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== Modals ========== -->
+  <div class="modal" id="mSup"><div class="modal-box">
+    <h3 id="supTitle">إضافة مورد</h3>
+    <div class="grid-2">
+      <div class="field"><label>اسم المورد</label><input id="sName"></div>
+      <div class="field"><label>يوم الزيارة</label>
+        <select id="sDay">
+          <option value="">لا يوجد</option>
+          <option>السبت</option><option>الأحد</option><option>الإثنين</option>
+          <option>الثلاثاء</option><option>الأربعاء</option><option>الخميس</option><option>الجمعة</option>
+        </select>
+      </div>
+      <div class="field"><label>رصيد افتتاحي</label><input id="sOpening" type="number" step="0.01" value="0"></div>
+      <div class="field"><label>ملاحظات</label><input id="sNote"></div>
+    </div>
+    <div style="height:8px"></div>
+    <div class="row-btns">
+      <button id="saveSup" class="btn primary">حفظ</button>
+      <button class="btn" data-close="#mSup">إغلاق</button>
+    </div>
+  </div></div>
+
+  <div class="modal" id="mInv"><div class="modal-box">
+    <h3 id="invTitle">فاتورة جديدة</h3>
+    <div class="grid-2">
+      <div class="field"><label>المورد</label><select id="iSup"></select></div>
+      <div class="field"><label>التاريخ</label><input id="iDate" type="date"></div>
+      <div class="field"><label>رقم الفاتورة</label><input id="iNum"></div>
+      <div class="field"><label>المبلغ</label><input id="iAmt" type="number" step="0.01"></div>
+      <div class="field" style="grid-column:1/-1"><label>ملاحظات</label><textarea id="iNote" rows="2"></textarea></div>
+    </div>
+    <div style="height:8px"></div>
+    <div class="row-btns">
+      <button id="saveInv" class="btn primary">حفظ</button>
+      <button class="btn" data-close="#mInv">إغلاق</button>
+    </div>
+  </div></div>
+
+  <div class="modal" id="mPay"><div class="modal-box">
+    <h3 id="payTitle">دفعة جديدة</h3>
+    <div class="grid-2">
+      <div class="field"><label>المورد</label><select id="pSup"></select></div>
+      <div class="field"><label>التاريخ</label><input id="pDate" type="date"></div>
+      <div class="field"><label>الطريقة</label><input id="pMethod" placeholder="نقدي/شيك/تحويل"></div>
+      <div class="field"><label>المندوب</label><input id="pRep"></div>
+      <div class="field"><label>المبلغ</label><input id="pAmt" type="number" step="0.01"></div>
+      <div class="field" style="grid-column:1/-1"><label>ملاحظات</label><textarea id="pNote" rows="2"></textarea></div>
+    </div>
+    <div style="height:8px"></div>
+    <div class="row-btns">
+      <button id="savePay" class="btn success">حفظ</button>
+      <button class="btn" data-close="#mPay">إغلاق</button>
+    </div>
+  </div></div>
+
+  <div class="modal" id="mStatement"><div class="modal-box">
+    <h3>كشف حساب — <span id="stName"></span></h3>
+    <div class="grid-2">
+      <div class="field"><label>من تاريخ</label><input type="date" id="stFrom"></div>
+      <div class="field"><label>إلى تاريخ</label><input type="date" id="stTo"></div>
+    </div>
+    <div class="row-btns">
+      <button id="stFilter" class="btn">تطبيق</button>
+      <button id="stExport" class="btn ghost">تصدير CSV</button>
+      <button class="btn" data-close="#mStatement">إغلاق</button>
+    </div>
+    <div class="table-wrap" style="max-height:420px">
+      <table class="table small">
+        <thead><tr><th>التاريخ</th><th>البيان</th><th>رقم/طريقة</th><th>مدين</th><th>دائن</th><th>الرصيد</th><th>ملاحظات</th></tr></thead>
+        <tbody id="stBody"></tbody>
+      </table>
+    </div>
+  </div></div>
+
+<script>
+/* ====== Tiny helpers ====== */
+const $ = sel => document.querySelector(sel);
+const $$ = sel => Array.from(document.querySelectorAll(sel));
+const fmt = n => Number(n||0).toLocaleString('ar-EG', {maximumFractionDigits:2});
+const uid = () => Math.floor(Math.random()*1e9);
+const LS_KEY = 'aymanBook_v2';
+
+function save(){ localStorage.setItem(LS_KEY, JSON.stringify(state)); }
+function load(){
+  try{
+    const raw = localStorage.getItem(LS_KEY);
+    if(raw){ Object.assign(state, JSON.parse(raw)); }
+  }catch(e){}
+}
+
+/* ====== Data ====== */
+const state = {
+  suppliers: [],
+  invoices: [],
+  payments: []
+};
+
+/* ====== Calculations ====== */
+const byId = (arr,id)=> arr.find(x=>x.id===id);
+const sumInv = (supId)=> state.invoices.filter(x=>x.supplierId===supId).reduce((a,b)=>a+Number(b.amount||0),0);
+const sumPay = (supId)=> state.payments.filter(x=>x.supplierId===supId).reduce((a,b)=>a+Number(b.amount||0),0);
+const balance = (supId)=> {
+  const s = byId(state.suppliers, supId);
+  if(!s) return 0;
+  return Number(s.opening||0) + sumInv(supId) - sumPay(supId);
+};
+
+/* ====== Tabs ====== */
+function initTabs(){
+  $$('.tab').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      $$('.tab').forEach(b=> b.classList.remove('active'));
+      $$('.tabcontent').forEach(tc=> tc.style.display='none');
+      btn.classList.add('active');
+      const target = btn.getAttribute('data-tab');
+      if(target) $(target).style.display='block';
+    });
+  });
+}
+
+/* ====== Modals ====== */
+function openModal(sel){ $(sel).classList.add('show'); }
+function closeModal(sel){ $(sel).classList.remove('show'); }
+$$('[data-close]').forEach(b=> b.addEventListener('click', ()=> closeModal(b.getAttribute('data-close')) ) );
+
+/* ====== Rendering ====== */
+function renderSuppliers(){
+  const q = ($('#supSearch')?.value || '').trim();
+  const rows = q ? state.suppliers.filter(s=> s.name.includes(q)) : state.suppliers;
+  $('#supBody').innerHTML = rows.map((s,i)=>`
+    <tr>
+      <td>${i+1}</td>
+      <td>${s.name}</td>
+      <td>${s.visitDay || ''}</td>
+      <td>${fmt(s.opening||0)}</td>
+      <td class="num ${balance(s.id)>0?'positive': (balance(s.id)<0?'negative':'')}">${fmt(balance(s.id))}</td>
+      <td>
+        <button class="btn" onclick="editSup(${s.id})">تعديل</button>
+        <button class="btn" onclick="openStatement(${s.id})">كشف</button>
+        <button class="btn warn" onclick="delSup(${s.id})">حذف</button>
+      </td>
+    </tr>
+  `).join('') || `<tr><td colspan="6" class="empty">لا يوجد موردون بعد</td></tr>`;
+}
+function renderInvoices(){
+  $('#invBody').innerHTML = state.invoices.sort((a,b)=> (a.date>b.date? -1:1)).map(x=>{
+    const s = byId(state.suppliers, x.supplierId);
+    return `<tr>
+      <td>${x.date||''}</td>
+      <td>${x.number||''}</td>
+      <td>${s ? s.name : ''}</td>
+      <td>${fmt(x.amount||0)}</td>
+      <td>${x.note||''}</td>
+      <td><button class="btn warn" onclick="delInv(${x.id})">حذف</button></td>
+    </tr>`
+  }).join('') || `<tr><td colspan="6" class="empty">لا توجد فواتير</td></tr>`;
+}
+function renderPayments(){
+  $('#payBody').innerHTML = state.payments.sort((a,b)=> (a.date>b.date? -1:1)).map(x=>{
+    const s = byId(state.suppliers, x.supplierId);
+    return `<tr>
+      <td>${x.date||''}</td>
+      <td>${s ? s.name : ''}</td>
+      <td>${x.method||''}</td>
+      <td>${x.rep||''}</td>
+      <td>${fmt(x.amount||0)}</td>
+      <td>${x.note||''}</td>
+      <td><button class="btn warn" onclick="delPay(${x.id})">حذف</button></td>
+    </tr>`
+  }).join('') || `<tr><td colspan="7" class="empty">لا توجد دفعات</td></tr>`;
+}
+function renderReport(){
+  $('#rBody').innerHTML = state.suppliers.map(s=>{
+    const inv = sumInv(s.id), pay = sumPay(s.id), bal = (s.opening||0)+inv - pay;
+    return `<tr>
+      <td>${s.name}</td>
+      <td>${fmt(inv)}</td>
+      <td>${fmt(pay)}</td>
+      <td>${fmt(s.opening||0)}</td>
+      <td class="num ${bal>0?'positive': (bal<0?'negative':'')}">${fmt(bal)}</td>
+    </tr>`
+  }).join('') || `<tr><td colspan="5" class="empty">لا توجد بيانات</td></tr>`;
+}
+function renderVisitList(){
+  const days = ['السبت','الأحد','الإثنين','الثلاثاء','الأربعاء','الخميس','الجمعة'];
+  const items = days.map(d=>{
+    const list = state.suppliers.filter(s=> s.visitDay===d).map(s=> s.name);
+    return list.length ? `<div><b>${d}:</b> ${list.join('، ')}</div>` : '';
+  }).filter(Boolean);
+  $('#visitList').innerHTML = items.join('') || 'لا توجد زيارات محددة.';
+}
+function renderSelects(){
+  const opts = ['<option value="">اختر</option>'].concat(state.suppliers.map(s=> `<option value="${s.id}">${s.name}</option>`)).join('');
+  $('#selSupplier').innerHTML = opts;
+  $('#iSup').innerHTML = opts;
+  $('#pSup').innerHTML = opts;
+}
+function renderKPIs(){
+  const inv = state.invoices.reduce((a,b)=>a+Number(b.amount||0),0);
+  const pay = state.payments.reduce((a,b)=>a+Number(b.amount||0),0);
+  const bal = state.suppliers.reduce((acc,s)=> acc + (Number(s.opening||0)+sumInv(s.id)-sumPay(s.id)), 0);
+  $('#kInv').textContent = fmt(inv);
+  $('#kPay').textContent = fmt(pay);
+  $('#kBal').textContent = fmt(bal);
+  const sel = Number($('#selSupplier').value||0);
+  const b = sel? balance(sel) : 0;
+  const el = $('#selBalance');
+  el.textContent = fmt(b);
+  el.classList.remove('positive','negative');
+  if(b>0) el.classList.add('positive');
+  else if(b<0) el.classList.add('negative');
+}
+function rerender(){
+  renderSelects();
+  renderSuppliers();
+  renderInvoices();
+  renderPayments();
+  renderReport();
+  renderVisitList();
+  renderKPIs();
+}
+
+/* ====== Supplier CRUD ====== */
+let editingSupId = null;
+function newSup(){
+  editingSupId = null;
+  $('#supTitle').textContent = 'إضافة مورد';
+  $('#sName').value = '';
+  $('#sDay').value = '';
+  $('#sOpening').value = '0';
+  $('#sNote').value = '';
+  openModal('#mSup');
+}
+function editSup(id){
+  const s = byId(state.suppliers, id); if(!s) return;
+  editingSupId = id;
+  $('#supTitle').textContent = 'تعديل مورد';
+  $('#sName').value = s.name||'';
+  $('#sDay').value = s.visitDay||'';
+  $('#sOpening').value = s.opening||0;
+  $('#sNote').value = s.note||'';
+  openModal('#mSup');
+}
+function delSup(id){
+  if(!confirm('حذف المورد سيحذف فواتيره ودفعاته أيضاً. متابعة؟')) return;
+  state.suppliers = state.suppliers.filter(s=> s.id!==id);
+  state.invoices = state.invoices.filter(x=> x.supplierId!==id);
+  state.payments = state.payments.filter(x=> x.supplierId!==id);
+  save(); rerender();
+}
+function saveSup(){
+  const name = $('#sName').value.trim();
+  if(!name){ alert('أدخل اسم المورد'); return; }
+  const s = {
+    id: editingSupId ?? uid(),
+    name,
+    visitDay: $('#sDay').value || '',
+    opening: Number($('#sOpening').value || 0),
+    note: $('#sNote').value || ''
+  };
+  if(editingSupId){
+    const idx = state.suppliers.findIndex(x=> x.id===editingSupId);
+    state.suppliers[idx] = s;
+  }else{
+    state.suppliers.push(s);
+  }
+  save(); closeModal('#mSup'); rerender();
+}
+
+/* ====== Invoice CRUD ====== */
+function newInv(){
+  $('#invTitle').textContent = 'فاتورة جديدة';
+  $('#iSup').value = '';
+  $('#iDate').valueAsDate = new Date();
+  $('#iNum').value = '';
+  $('#iAmt').value = '';
+  $('#iNote').value = '';
+  openModal('#mInv');
+}
+function saveInv(){
+  const supId = Number($('#iSup').value||0);
+  if(!supId){ alert('اختر المورد'); return; }
+  const row = {
+    id: uid(),
+    supplierId: supId,
+    date: $('#iDate').value || '',
+    number: $('#iNum').value || '',
+    amount: Number($('#iAmt').value || 0),
+    note: $('#iNote').value || ''
+  };
+  state.invoices.push(row);
+  save(); closeModal('#mInv'); rerender();
+}
+function delInv(id){
+  if(!confirm('حذف هذه الفاتورة؟')) return;
+  state.invoices = state.invoices.filter(x=> x.id!==id);
+  save(); rerender();
+}
+
+/* ====== Payment CRUD ====== */
+function newPay(){
+  $('#payTitle').textContent = 'دفعة جديدة';
+  $('#pSup').value = '';
+  $('#pDate').valueAsDate = new Date();
+  $('#pMethod').value = '';
+  $('#pRep').value = '';
+  $('#pAmt').value = '';
+  $('#pNote').value = '';
+  openModal('#mPay');
+}
+function savePay(){
+  const supId = Number($('#pSup').value||0);
+  if(!supId){ alert('اختر المورد'); return; }
+  const row = {
+    id: uid(),
+    supplierId: supId,
+    date: $('#pDate').value || '',
+    method: $('#pMethod').value || '',
+    rep: $('#pRep').value || '',
+    amount: Number($('#pAmt').value || 0),
+    note: $('#pNote').value || ''
+  };
+  state.payments.push(row);
+  save(); closeModal('#mPay'); rerender();
+}
+function delPay(id){
+  if(!confirm('حذف هذه الدفعة؟')) return;
+  state.payments = state.payments.filter(x=> x.id!==id);
+  save(); rerender();
+}
+
+/* ====== Statement ====== */
+let stId = null;
+function openStatement(id){
+  stId = id;
+  const s = byId(state.suppliers, id);
+  if(!s){ alert('اختر المورّد'); return; }
+  $('#stName').textContent = s.name;
+  $('#stFrom').value = '';
+  $('#stTo').value = '';
+  renderStatement();
+  openModal('#mStatement');
+}
+function renderStatement(){
+  const id = stId; const s = byId(state.suppliers, id); if(!s) return;
+  const from = $('#stFrom').value || '0000-01-01';
+  const to = $('#stTo').value || '9999-12-31';
+  const opening = Number(s.opening||0);
+  const invs = state.invoices.filter(x=>x.supplierId===id && x.date>=from && x.date<=to)
+               .map(x=>({date:x.date, kind:'فاتورة', ref:x.number||'', debit:Number(x.amount||0), credit:0, note:x.note||''}));
+  const pays = state.payments.filter(x=>x.supplierId===id && x.date>=from && x.date<=to)
+               .map(x=>({date:x.date, kind:'دفعة', ref:x.method||'', debit:0, credit:Number(x.amount||0), note:x.note||''}));
+  const rows = [...invs, ...pays].sort((a,b)=> (a.date===b.date? (a.kind>b.kind?1:-1) : (a.date>b.date?1:-1)) );
+  let bal = opening;
+  const out = [];
+  out.push(`<tr><td></td><td class="muted">رصيد افتتاحي</td><td></td><td></td><td></td><td class="num ${bal>0?'positive': (bal<0?'negative':'')}">${fmt(bal)}</td><td></td></tr>`);
+  rows.forEach(r=>{
+    bal += r.debit - r.credit;
+    out.push(`<tr>
+      <td>${r.date}</td><td>${r.kind}</td><td>${r.ref||''}</td>
+      <td>${r.debit? fmt(r.debit):''}</td><td>${r.credit? fmt(r.credit):''}</td>
+      <td class="num ${bal>0?'positive': (bal<0?'negative':'')}">${fmt(bal)}</td><td>${r.note||''}</td>
+    </tr>`);
+  });
+  $('#stBody').innerHTML = out.join('');
+}
+function toCSV(rows, headers){
+  const esc = v => `"${String(v).replace(/"/g,'""')}"`;
+  const head = headers.map(esc).join(',');
+  const body = rows.map(r=> headers.map(h=> esc(r[h] ?? '')).join(',')).join('\n');
+  return head + '\n' + body;
+}
+function downloadCSV(filename, csv){
+  const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+function exportInvCsv(){
+  const rows = state.invoices.map(x=>({'التاريخ':x.date,'رقم الفاتورة':x.number||'','المورد':byId(state.suppliers,x.supplierId)?.name||'','المبلغ':x.amount,'ملاحظات':x.note||''}));
+  downloadCSV('invoices.csv', toCSV(rows, ['التاريخ','رقم الفاتورة','المورد','المبلغ','ملاحظات']));
+}
+function exportPayCsv(){
+  const rows = state.payments.map(x=>({'التاريخ':x.date,'المورد':byId(state.suppliers,x.supplierId)?.name||'','الطريقة':x.method||'','المندوب':x.rep||'','المبلغ':x.amount,'ملاحظات':x.note||''}));
+  downloadCSV('payments.csv', toCSV(rows, ['التاريخ','المورد','الطريقة','المندوب','المبلغ','ملاحظات']));
+}
+function exportReportCsv(){
+  const rows = state.suppliers.map(s=>{
+    return {'المورد':s.name,'إجمالي فواتير':sumInv(s.id),'إجمالي دفعات':sumPay(s.id),'افتتاحي':s.opening||0,'الرصيد الحالي':balance(s.id)};
+  });
+  downloadCSV('report.csv', toCSV(rows, ['المورد','إجمالي فواتير','إجمالي دفعات','افتتاحي','الرصيد الحالي']));
+}
+function exportStatementCsv(){
+  const id = stId; const s = byId(state.suppliers, id); if(!s) return;
+  const from = $('#stFrom').value || '0000-01-01';
+  const to = $('#stTo').value || '9999-12-31';
+  const invs = state.invoices.filter(x=>x.supplierId===id && x.date>=from && x.date<=to)
+               .map(x=>({'التاريخ':x.date,'البيان':'فاتورة','رقم/طريقة':x.number||'','مدين':x.amount,'دائن':'','ملاحظات':x.note||''}));
+  const pays = state.payments.filter(x=>x.supplierId===id && x.date>=from && x.date<=to)
+               .map(x=>({'التاريخ':x.date,'البيان':'دفعة','رقم/طريقة':x.method||'','مدين':'','دائن':x.amount,'ملاحظات':x.note||''}));
+  const rows = [{'التاريخ':'','البيان':'رصيد افتتاحي','رقم/طريقة':'','مدين':'','دائن':'','ملاحظات':''}, ...invs, ...pays].sort((a,b)=> (a['التاريخ']>b['التاريخ']?1:-1));
+  downloadCSV(`statement_${s.name}.csv`, toCSV(rows, ['التاريخ','البيان','رقم/طريقة','مدين','دائن','ملاحظات']));
+}
+
+/* ====== Events & Init ====== */
+function wire(){
+  // main buttons
+  $('#btnAddSupplier').addEventListener('click', newSup);
+  $('#addSupplier').addEventListener('click', newSup);
+  $('#saveSup').addEventListener('click', saveSup);
+
+  $('#btnAddInvoice').addEventListener('click', newInv);
+  $('#newInv').addEventListener('click', newInv);
+  $('#saveInv').addEventListener('click', saveInv);
+
+  $('#btnAddPayment').addEventListener('click', newPay);
+  $('#newPay').addEventListener('click', newPay);
+  $('#savePay').addEventListener('click', savePay);
+
+  $('#selSupplier').addEventListener('change', renderKPIs);
+
+  // export
+  $('#exportInvCsv').addEventListener('click', exportInvCsv);
+  $('#exportPayCsv').addEventListener('click', exportPayCsv);
+  $('#exportReportCsv').addEventListener('click', exportReportCsv);
+
+  // statement
+  $('#btnStatement').addEventListener('click', ()=>{
+    const id = Number($('#selSupplier').value||0);
+    if(!id){ alert('اختر المورّد أولاً'); return; }
+    openStatement(id);
+  });
+  $('#stFilter').addEventListener('click', renderStatement);
+  $('#stExport').addEventListener('click', exportStatementCsv);
+
+  // suppliers search
+  $('#supSearch').addEventListener('input', renderSuppliers);
+  $('#supClear').addEventListener('click', ()=>{ $('#supSearch').value=''; renderSuppliers(); });
+
+  // close modals on backdrop click
+  $$('.modal').forEach(m=>{
+    m.addEventListener('click', (e)=>{ if(e.target===m) m.classList.remove('show'); });
+  });
+}
+
+function init(){
+  load();
+  initTabs();
+  wire();
+  rerender();
+}
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
